@@ -315,7 +315,7 @@ void parseOutput(std::string parms)
 		else if (parm[0] == "destfile") { destfile = parm[1]; ddnote.append("destfile: "+parm[1]+"<BR/>"); }
 		else if (parm[0] == "destsize") {
 			std::vector<std::string> dd =  split(std::string(parm[1]), ",");
-			if (dd.size() < 4) err("Destsize doesn't contain 2 numbers (w,h)");
+			if (dd.size() < 2) err("Destsize doesn't contain 2 numbers (w,h)");
 			int destw = atoi(dd[0].c_str()); int desth = atoi(dd[1].c_str());
 			ddnote.append("destsize: "+parm[1]+"<BR/>"); 
 		}
