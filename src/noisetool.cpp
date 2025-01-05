@@ -494,7 +494,7 @@ int main(int argc, char **argv)
 			if (max < v) max = v;
 		}
 	}
-	printf("\theightmap min: %f  max: %f height: %f\n",min,max,heightMap.GetHeight()); fflush(stdout);
+	printf("\theightmap min: %f  max: %f\n",min,max); fflush(stdout);
 
 
 	printf("generate output...\n"); fflush(stdout);
