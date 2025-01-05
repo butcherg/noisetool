@@ -373,7 +373,6 @@ int main(int argc, char **argv)
 	try {
 	lineno=0;
 	if (argc < 2) err("No network file specified.");
-	if (argc < 3) err("No output file specified.");
 	
 	if (std::string(argv[2]) != "digraph") printf("parse network...\n"); fflush(stdout);
 	dd.append("digraph noisetool {\n\trankdir=LR;\n\tnode [shape=plaintext];\n"); 
