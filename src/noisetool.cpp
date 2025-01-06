@@ -59,6 +59,12 @@ unsigned lineno;
 
 void err(std::string msg)
 {
+	printf("Parse Error: %s.\n", msg.c_str());
+	exit(EXIT_FAILURE);
+}
+
+void parse_err(std::string msg)
+{
 	printf("Error: %s. (line %d)\n", msg.c_str(), lineno);
 	exit(EXIT_FAILURE);
 }
@@ -118,11 +124,12 @@ void parsePerlin(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
-		if (parm[0].find("freq") != std::string::npos) { p->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
-		if (parm[0].find("lac") != std::string::npos)  { p->SetLacunarity(atof(parm[1].c_str())); ddnote.append("<BR/>lacunarity: "+parm[1]); }
-		if (parm[0].find("per") != std::string::npos)  { p->SetPersistence(atof(parm[1].c_str())); ddnote.append("<BR/>persistence: "+parm[1]); }
-		if (parm[0].find("oct") != std::string::npos)  { p->SetOctaveCount(atoi(parm[1].c_str())); ddnote.append("<BR/>octaves: "+parm[1]); }
-		if (parm[0].find("seed") != std::string::npos) { p->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else if (parm[0].find("freq") != std::string::npos) { p->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
+		else if (parm[0].find("lac") != std::string::npos)  { p->SetLacunarity(atof(parm[1].c_str())); ddnote.append("<BR/>lacunarity: "+parm[1]); }
+		else if (parm[0].find("per") != std::string::npos)  { p->SetPersistence(atof(parm[1].c_str())); ddnote.append("<BR/>persistence: "+parm[1]); }
+		else if (parm[0].find("oct") != std::string::npos)  { p->SetOctaveCount(atoi(parm[1].c_str())); ddnote.append("<BR/>octaves: "+parm[1]); }
+		else if (parm[0].find("seed") != std::string::npos) { p->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = p;
 	addDDNode(name, ddnote);
@@ -137,10 +144,11 @@ void parseRidgedMulti(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; //else err("RidgedMulti module doesn't have a name");
-		if (parm[0].find("freq") != std::string::npos) { p->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
-		if (parm[0].find("lac") != std::string::npos)  { p->SetLacunarity(atof(parm[1].c_str())); ddnote.append("<BR/>lacunarity: "+parm[1]); }
-		if (parm[0].find("oct") != std::string::npos)  { p->SetOctaveCount(atoi(parm[1].c_str())); ddnote.append("<BR/>octaves: "+parm[1]); }
-		if (parm[0].find("seed") != std::string::npos) { p->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else if (parm[0].find("freq") != std::string::npos) { p->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
+		else if (parm[0].find("lac") != std::string::npos)  { p->SetLacunarity(atof(parm[1].c_str())); ddnote.append("<BR/>lacunarity: "+parm[1]); }
+		else if (parm[0].find("oct") != std::string::npos)  { p->SetOctaveCount(atoi(parm[1].c_str())); ddnote.append("<BR/>octaves: "+parm[1]); }
+		else if (parm[0].find("seed") != std::string::npos) { p->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = p;
 	addDDNode(name, ddnote);
@@ -155,10 +163,11 @@ void parseTurbulence(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; //else err("RidgedMulti module doesn't have a name");
-		if (parm[0].find("freq") != std::string::npos) { t->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
-		if (parm[0].find("pow") != std::string::npos)  { t->SetPower(atof(parm[1].c_str())); ddnote.append("<BR/>power: "+parm[1]); }
-		if (parm[0].find("roug") != std::string::npos) { t->SetRoughness(atoi(parm[1].c_str()));  ddnote.append("<BR/>roughness: "+parm[1]); }
-		if (parm[0].find("seed") != std::string::npos) { t->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else if (parm[0].find("freq") != std::string::npos) { t->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
+		else if (parm[0].find("pow") != std::string::npos)  { t->SetPower(atof(parm[1].c_str())); ddnote.append("<BR/>power: "+parm[1]); }
+		else if (parm[0].find("roug") != std::string::npos) { t->SetRoughness(atoi(parm[1].c_str()));  ddnote.append("<BR/>roughness: "+parm[1]); }
+		else if (parm[0].find("seed") != std::string::npos) { t->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = t;
 	addDDNode(name, ddnote);
@@ -173,10 +182,11 @@ void parseVoronoi(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1];
-		if (parm[0].find("dist") != std::string::npos) { v->EnableDistance(true); ddnote.append("<BR/>distance: true"); }
-		if (parm[0].find("disp") != std::string::npos) { v->SetDisplacement(atof(parm[1].c_str())); ddnote.append("<BR/>displacement: "+parm[1]); }
-		if (parm[0].find("freq") != std::string::npos) { v->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
-		if (parm[0].find("seed") != std::string::npos) { v->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else if (parm[0].find("dist") != std::string::npos) { v->EnableDistance(true); ddnote.append("<BR/>distance: true"); }
+		else if (parm[0].find("disp") != std::string::npos) { v->SetDisplacement(atof(parm[1].c_str())); ddnote.append("<BR/>displacement: "+parm[1]); }
+		else if (parm[0].find("freq") != std::string::npos) { v->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
+		else if (parm[0].find("seed") != std::string::npos) { v->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = v;
 	addDDNode(name, ddnote);
@@ -191,11 +201,12 @@ void parseBillow(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1];
-		if (parm[0].find("freq") != std::string::npos) { b->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
-		if (parm[0].find("lac") != std::string::npos)  { b->SetLacunarity(atof(parm[1].c_str())); ddnote.append("<BR/>lacunarity: "+parm[1]); }
-		if (parm[0].find("per") != std::string::npos)  { b->SetPersistence(atof(parm[1].c_str())); ddnote.append("<BR/>persistence: "+parm[1]); }
-		if (parm[0].find("oct") != std::string::npos)  { b->SetOctaveCount(atoi(parm[1].c_str())); ddnote.append("<BR/>octaves: "+parm[1]); }
-		if (parm[0].find("seed") != std::string::npos) { b->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else if (parm[0].find("freq") != std::string::npos) { b->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
+		else if (parm[0].find("lac") != std::string::npos)  { b->SetLacunarity(atof(parm[1].c_str())); ddnote.append("<BR/>lacunarity: "+parm[1]); }
+		else if (parm[0].find("per") != std::string::npos)  { b->SetPersistence(atof(parm[1].c_str())); ddnote.append("<BR/>persistence: "+parm[1]); }
+		else if (parm[0].find("oct") != std::string::npos)  { b->SetOctaveCount(atoi(parm[1].c_str())); ddnote.append("<BR/>octaves: "+parm[1]); }
+		else if (parm[0].find("seed") != std::string::npos) { b->SetSeed(atoi(parm[1].c_str())); ddnote.append("<BR/>seed: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = b;
 	addDDNode(name, ddnote);
@@ -210,6 +221,7 @@ void parseAdd(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = s;
 	addDDNode(name, ddnote);
@@ -224,6 +236,7 @@ void parseBlend(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = s;
 	addDDNode(name, ddnote);
@@ -238,12 +251,13 @@ void parseSelect(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; //else err("Select module doesn't have a name");
-		if (parm[0].find("bounds") != std::string::npos) {
+		else if (parm[0].find("bounds") != std::string::npos) {
 			std::vector<std::string> bb =  split(std::string(parm[1]), ",");
 			s->SetBounds(atof(bb[0].c_str()), atof(bb[1].c_str())); 
 			ddnote.append("<BR/>bounds: "+parm[1]); 
 		}
-		if (parm[0].find("edge") != std::string::npos) { s->SetEdgeFalloff(atof(parm[1].c_str())); ddnote.append("<BR/>edgefalloff: "+parm[1]); }
+		else if (parm[0].find("edge") != std::string::npos) { s->SetEdgeFalloff(atof(parm[1].c_str())); ddnote.append("<BR/>edgefalloff: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = s;
 	addDDNode(name, ddnote);
@@ -258,8 +272,9 @@ void parseScaleBias(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
-		if (parm[0].find("scale") != std::string::npos) { s->SetScale(atof(parm[1].c_str())); ddnote.append("<BR/>scale: "+parm[1]); }
-		if (parm[0].find("bias") != std::string::npos)  { s->SetBias(atof(parm[1].c_str())); ddnote.append("<BR/>bias: "+parm[1]); }
+		else if (parm[0].find("scale") != std::string::npos) { s->SetScale(atof(parm[1].c_str())); ddnote.append("<BR/>scale: "+parm[1]); }
+		else if (parm[0].find("bias") != std::string::npos)  { s->SetBias(atof(parm[1].c_str())); ddnote.append("<BR/>bias: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = s;
 	addDDNode(name, ddnote);
@@ -276,13 +291,14 @@ void parseConnect(std::string parms)
 		for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 			std::vector<std::string> parm =  split(*it, "=");
 			if (parm[0].find("source") != std::string::npos) source = parm[1]; 
-			if (parm[0].find("sink") != std::string::npos) sink = parm[1]; 
-			if (parm[0].find("inst") != std::string::npos) instance = atoi(parm[1].c_str()); 
+			else if (parm[0].find("sink") != std::string::npos) sink = parm[1]; 
+			else if (parm[0].find("inst") != std::string::npos) instance = atoi(parm[1].c_str()); 
+			else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 		}
 	}
 	else {
 		std::vector<std::string> p =  split(std::string(parms), ",");
-		if (p.size() < 3) err("Not enough paramters for connect (source,sink,instance)");
+		if (p.size() < 3) parse_err("Not enough paramters for connect (source,sink,instance)");
 		source = p[0];
 		sink = p[1];
 		instance = atoi(p[3].c_str());
@@ -321,8 +337,9 @@ void parseOutput(std::string parms)
 		}
 		else if (parm[0] == "edgegradientdepth") { edgegradientdepth = atoi(parm[1].c_str()); ddnote.append("edgegradientdepth: "+parm[1]+"<BR/>"); }
 		else if (parm[0] == "edgegradientelevation") { edgegradientelevation = atoi(parm[1].c_str());  ddnote.append("edgegradientelevation: "+parm[1]+"<BR/>"); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
-	if (outputmodule.size() == 0) err("outputmodule parameter not defined");
+	if (outputmodule.size() == 0) parse_err("outputmodule parameter not defined");
 	dd.append("\t"+outputmodule+" -> output\n");
 	addDDNode("output", ddnote);
 }
@@ -361,7 +378,7 @@ void parseFile(std::string filename)
 		//network:
 		else if (l[0] == "connect") parseConnect(l[1]);
 		else if (l[0] == "output") parseOutput(l[1]);
-		else err(string_format("Unrecognized keyword: %s",l[0].c_str()));
+		else parse_err(string_format("Unrecognized keyword: %s",l[0].c_str()));
 	}
 	netfile.close();
 }

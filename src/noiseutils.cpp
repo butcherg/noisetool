@@ -1005,18 +1005,18 @@ void NoiseMapBuilderBrick::ApplyBorderGradient (int depth, float elevation)
 	std::vector<float> m; m.push_back(0.0);
 	
 	//cubic spline interpolation, from spline.h, https://kluge.in-chemnitz.de/opensource/spline/
-	std::vector<double> X = {0.0, 1.0, (double) depth}; // must be increasing
-	std::vector<double> Y = {0.0, elevation, 1.0};
+	std::vector<double> X = {0.0, 1.0, (double) depth, (double) depth+1}; // must be increasing
+	std::vector<double> Y = {0.0, elevation, 1.0, 1.0};
 	tk::spline s(X,Y,tk::spline::cspline);  //tk::spline::linear, tk::spline::cspline (default),  tk::spline::cspline_hermite
 	for (double x=1.0; x<=(double) depth; x += 1.0)
 		m.push_back(s(x));
 	
-	/*
+	
 	fprintf(stderr, "\tgradient multipliers: {");
 	for (unsigned i=0; i<m.size(); i++)
 		fprintf(stderr, "%f ", m[i]);
 	fprintf(stderr, "}\n"); fflush(stderr);
-	*/
+	
 	
 	//4. make the countours
 	unsigned l=0, r=w-1, t=0, b=h-1;
