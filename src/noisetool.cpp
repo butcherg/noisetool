@@ -599,21 +599,21 @@ int main(int argc, char **argv)
 		renderer.SetDestImage (image);
 		renderer.Render ();
 		
-		printf("\twrite BMP image...\n"); fflush(stdout);
+		printf("\twrite BMP image: %s...\n", destfile.c_str()); fflush(stdout);
 		utils::WriterBMP writer;
 		writer.SetSourceImage (image);
 		writer.SetDestFilename (destfile);
 		writer.WriteDestFile ();
 	}
 	else if (ext == "txt") {  //source: image, change to noisemap
-		printf("\twrite TXT height image...\n"); fflush(stdout);
+		printf("\twrite TXT height image: %s...\n",destfile.c_str()); fflush(stdout);
 		utils::WriterOpenSCADSurface writer;
 		writer.SetSourceNoiseMap (heightMap);
 		writer.SetDestFilename (destfile);
 		writer.WriteDestFile ();
 	}
 	else if (ext == "ter") {  //source: noisemap
-		printf("\twrite TER heightmap...\n"); fflush(stdout);
+		printf("\twrite TER heightmap: %s...\n", destfile.c_str()); fflush(stdout);
 		utils::WriterTER writer;
 		writer.SetSourceNoiseMap (heightMap);
 		writer.SetDestFilename (destfile);
