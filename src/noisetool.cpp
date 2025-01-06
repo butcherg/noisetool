@@ -316,7 +316,7 @@ void parseOutput(std::string parms)
 		else if (parm[0] == "destsize") {
 			std::vector<std::string> dd =  split(std::string(parm[1]), ",");
 			if (dd.size() < 2) err("Destsize doesn't contain 2 numbers (w,h)");
-			int destw = atoi(dd[0].c_str()); int desth = atoi(dd[1].c_str());
+			destw = atoi(dd[0].c_str()); desth = atoi(dd[1].c_str());
 			ddnote.append("destsize: "+parm[1]+"<BR/>"); 
 		}
 		else if (parm[0] == "edgegradientdepth") { edgegradientdepth = atoi(parm[1].c_str()); ddnote.append("edgegradientdepth: "+parm[1]+"<BR/>"); }
