@@ -369,6 +369,7 @@ void parseConnect(std::string parms)
 		source = p[0];
 		sink = p[1];
 		instance = atoi(p[3].c_str());
+		if (modules[sink]->GetSourceModuleCount() < instance) parse_err("This connect overloads the sink module connect count");
 	}
 	modules[sink]->SetSourceModule(instance, *(modules[source]));
 	dd.append("\t"+source+" -> "+sink+";\n");
