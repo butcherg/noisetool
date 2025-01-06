@@ -390,7 +390,7 @@ int main(int argc, char **argv)
 	
 		//the following read command line parameters to replace any set in the network file.  Same syntax
 		if (std::string(argv[i]).find("bounds") != std::string::npos) {  
-			std::vector<std::string> bb =  split(std::string(argv[i]), ":");
+			std::vector<std::string> bb =  split(std::string(argv[i]), "=");
 			if (bb.size() < 2) err("Malformed bounds (1)");
 			std::vector<std::string> b = split(bb[1], ",");
 			if (b.size() < 4) err("Malformed bounds (2)");
@@ -398,7 +398,7 @@ int main(int argc, char **argv)
 		}
 		
 		if (std::string(argv[i]).find("destsize") != std::string::npos) { 
-			std::vector<std::string> dd =  split(std::string(argv[i]), ":");
+			std::vector<std::string> dd =  split(std::string(argv[i]), "=");
 			if (dd.size() < 2) err("Malformed destsize (destsize:w,h)");
 			std::vector<std::string> d = split(dd[1], ",");
 			if (d.size() < 2) err("Malformed destsize");
@@ -407,13 +407,13 @@ int main(int argc, char **argv)
 		}
 		
 		if (std::string(argv[i]).find("gradientdepth") != std::string::npos) {  
-			std::vector<std::string> dd =  split(std::string(argv[i]), ":");
+			std::vector<std::string> dd =  split(std::string(argv[i]), "=");
 			if (dd.size() < 2) err("Malformed gradientdepth (gradientdepth:d)");
 			edgegradientdepth = atoi(dd[1].c_str());
 		}
 		
 		if (std::string(argv[i]).find("gradientelevation") != std::string::npos) {  
-			std::vector<std::string> dd =  split(std::string(argv[i]), ":");
+			std::vector<std::string> dd =  split(std::string(argv[i]), "=");
 			if (dd.size() < 2) err("Malformed gradientelevation (gradientelevation:f)");
 			edgegradientelevation = atoi(dd[1].c_str());
 		}
@@ -431,7 +431,7 @@ int main(int argc, char **argv)
 		*/
 		
 		if (std::string(argv[i]).find("destfile") != std::string::npos) {  
-			std::vector<std::string> d =  split(std::string(argv[i]), ":");
+			std::vector<std::string> d =  split(std::string(argv[i]), "=");
 			if (d.size() < 2) err("Malformed destfile");
 			destfile = d[1];
 		}
