@@ -98,6 +98,37 @@ void addDDNode(std::string name, std::string note)
 		dd.append("\t"+name+" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"2\"><TR><TD>"+name+"</TD></TR><TR><TD ALIGN=\"LEFT\"><FONT POINT-SIZE=\"6\">"+note+"</FONT></TD></TR></TABLE>>];\n");
 }
 
+void parseCache(std::string parms)
+{
+	std::string name, ddnote="module::Cache\n";
+	module::Cache *s = new module::Cache();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
+
+//class generator Checkerboard
+void parseCheckerboard(std::string parms)
+{
+	//printf("%s\n", parms.c_str());
+	std::string name, ddnote="module::Checkerboard";
+	module::Checkerboard *p = new module::Checkerboard();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = p;
+	addDDNode(name, ddnote);
+}
+
 //class generator Cylinders
 void parseCylinders(std::string parms)
 {
@@ -108,7 +139,8 @@ void parseCylinders(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
-		if (parm[0].find("freq") != std::string::npos) { p->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
+		else if (parm[0].find("freq") != std::string::npos) { p->SetFrequency(atof(parm[1].c_str())); ddnote.append("<BR/>frequency: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = p;
 	addDDNode(name, ddnote);
@@ -221,6 +253,41 @@ void parseAdd(std::string parms)
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
+//class modifier Abs
+void parseAbs(std::string parms)
+{
+	std::string name, ddnote="module::Abs\n";
+	module::Abs *s = new module::Abs();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
+//class modifier Clamp
+void parseClamp(std::string parms)
+{
+	std::string name, ddnote="module::Clamp\n";
+	module::Clamp *s = new module::Clamp();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1];
+		else if (parm[0].find("bounds") != std::string::npos) {
+			std::vector<std::string> bb =  split(std::string(parm[1]), ",");
+			s->SetBounds(atof(bb[0].c_str()), atof(bb[1].c_str())); 
+			ddnote.append("<BR/>bounds: "+parm[1]); 
+		}
 		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = s;
@@ -360,24 +427,28 @@ void parseFile(std::string filename)
 		std::vector<std::string> l =  split(std::string(ll[0]), ":");
 		
 		//generators
-		if (l[0] == "billow") parseBillow(l[1]);
-		else if (l[0] == "cylinders") parseCylinders(l[1]);
-		else if (l[0] == "perlin") parsePerlin(l[1]);
-		else if (l[0] == "ridgedmulti") parseRidgedMulti(l[1]);
-		else if (l[0] == "turbulence") parseTurbulence(l[1]);
-		else if (l[0] == "voronoi") parseVoronoi(l[1]);
+		if (l[0] == "Billow") parseBillow(l[1]);
+		else if (l[0] == "Cache") parseCache(l[1]);
+		else if (l[0] == "Checkerboard") parseCheckerboard(l[1]);
+		else if (l[0] == "Cylinders") parseCylinders(l[1]);
+		else if (l[0] == "Perlin") parsePerlin(l[1]);
+		else if (l[0] == "Ridgedmulti") parseRidgedMulti(l[1]);
+		else if (l[0] == "Turbulence") parseTurbulence(l[1]);
+		else if (l[0] == "Voronoi") parseVoronoi(l[1]);
 		
 		//aggregators:
-		else if (l[0] == "add") parseAdd(l[1]);
-		else if (l[0] == "blend") parseBlend(l[1]);
-		else if (l[0] == "select") parseSelect(l[1]);
+		else if (l[0] == "Add") parseAdd(l[1]);
+		else if (l[0] == "Abs") parseAbs(l[1]);
+		else if (l[0] == "Blend") parseBlend(l[1]);
+		else if (l[0] == "Select") parseSelect(l[1]);
 		
 		//modifiers:
-		else if (l[0] == "scalebias") parseScaleBias(l[1]);
+		else if (l[0] == "Clamp") parseClamp(l[1]);
+		else if (l[0] == "Scalebias") parseScaleBias(l[1]);
 		
 		//network:
-		else if (l[0] == "connect") parseConnect(l[1]);
-		else if (l[0] == "output") parseOutput(l[1]);
+		else if (l[0] == "Connect") parseConnect(l[1]);
+		else if (l[0] == "Output") parseOutput(l[1]);
 		else parse_err(string_format("Unrecognized keyword: %s",l[0].c_str()));
 	}
 	netfile.close();
