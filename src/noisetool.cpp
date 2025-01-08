@@ -244,6 +244,22 @@ void parseBillow(std::string parms)
 	addDDNode(name, ddnote);
 }
 
+//class generator Const
+void parseConst(std::string parms)
+{
+	std::string name, ddnote="module::Const\n";
+	module::Const *s = new module::Const();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else if (parm[0].find("const") != std::string::npos) { s->SetConstValue(atoi(parm[1].c_str())); ddnote.append("<BR/>const: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
 //class aggregator Add
 void parseAdd(std::string parms)
 {
@@ -294,11 +310,46 @@ void parseClamp(std::string parms)
 	addDDNode(name, ddnote);
 }
 
+//class modifier Curve
+void parseCurve(std::string parms)
+{
+	std::string name, ddnote="module::Curve\n";
+	module::Curve *s = new module::Curve();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1];
+		else if (parm[0].find("ctrlpoint") != std::string::npos) {
+			std::vector<std::string> bb =  split(std::string(parm[1]), ",");
+			s->AddControlPoint(atof(bb[0].c_str()), atof(bb[1].c_str())); 
+			ddnote.append("<BR/>ctrlpoint: "+parm[1]); 
+		}
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
 //class aggregator Blend
 void parseBlend(std::string parms)
 {
 	std::string name, ddnote="module::Blend\n";
 	module::Blend *s = new module::Blend();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
+//class aggregator Multiply
+void parseMultiply(std::string parms)
+{
+	std::string name, ddnote="module::Multiply\n";
+	module::Multiply *s = new module::Multiply();
 	std::vector<std::string> pp =  split(std::string(parms), ";");
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
@@ -330,6 +381,51 @@ void parseSelect(std::string parms)
 	addDDNode(name, ddnote);
 }
 
+//class aggregator Max
+void parseMax(std::string parms)
+{
+	std::string name, ddnote="module::Max\n";
+	module::Max *s = new module::Max();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
+//class aggregator Min
+void parseMin(std::string parms)
+{
+	std::string name, ddnote="module::Min\n";
+	module::Min *s = new module::Min();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
+//class aggregator Power
+void parsePower(std::string parms)
+{
+	std::string name, ddnote="module::Power\n";
+	module::Power *s = new module::Power();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
 //class modifier ScaleBias
 void parseScaleBias(std::string parms)
 {
@@ -341,6 +437,36 @@ void parseScaleBias(std::string parms)
 		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
 		else if (parm[0].find("scale") != std::string::npos) { s->SetScale(atof(parm[1].c_str())); ddnote.append("<BR/>scale: "+parm[1]); }
 		else if (parm[0].find("bias") != std::string::npos)  { s->SetBias(atof(parm[1].c_str())); ddnote.append("<BR/>bias: "+parm[1]); }
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
+//class modifier Displace
+void parseDisplace(std::string parms)
+{
+	std::string name, ddnote="module::Displace\n";
+	module::Displace *s = new module::Displace();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
+//class modifier Invert
+void parseInvert(std::string parms)
+{
+	std::string name, ddnote="module::Invert\n";
+	module::Invert *s = new module::Invert();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
 		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
 	modules[name] = s;
@@ -441,10 +567,18 @@ void parseFile(std::string filename)
 		else if (l[0] == "Add") parseAdd(l[1]);
 		else if (l[0] == "Abs") parseAbs(l[1]);
 		else if (l[0] == "Blend") parseBlend(l[1]);
+		else if (l[0] == "Max") parseMax(l[1]);
+		else if (l[0] == "Min") parseMin(l[1]);
+		else if (l[0] == "Multiply") parseMultiply(l[1]);
+		else if (l[0] == "Power") parsePower(l[1]);
 		else if (l[0] == "Select") parseSelect(l[1]);
 		
 		//modifiers:
 		else if (l[0] == "Clamp") parseClamp(l[1]);
+		else if (l[0] == "Const") parseConst(l[1]);
+		else if (l[0] == "Curve") parseCurve(l[1]);
+		else if (l[0] == "Displace") parseDisplace(l[1]);
+		else if (l[0] == "Invert") parseInvert(l[1]);
 		else if (l[0] == "Scalebias") parseScaleBias(l[1]);
 		
 		//network:
