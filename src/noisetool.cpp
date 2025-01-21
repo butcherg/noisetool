@@ -579,7 +579,7 @@ void parseFile(std::string filename)
 		else if (l[0] == "Curve") parseCurve(l[1]);
 		else if (l[0] == "Displace") parseDisplace(l[1]);
 		else if (l[0] == "Invert") parseInvert(l[1]);
-		else if (l[0] == "Scalebias") parseScaleBias(l[1]);
+		else if (l[0] == "ScaleBias") parseScaleBias(l[1]);
 		
 		//network:
 		else if (l[0] == "Connect") parseConnect(l[1]);
