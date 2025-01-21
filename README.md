@@ -13,13 +13,13 @@ Note: as of 1/4/2025, noisetool is an incomplete incorporation of libnoise, not 
 
 ## Building
 
-The only prerequisite for noisetool is libnoise, which can be built by the noisetool CMake build system by supplying the -DBUILD_LIBNOISE option. This option takes one of three values: 
+The only prerequisite for noisetool is libnoise, which can be either be the OS-installed libnoise library or built by the noisetool CMake build system by supplying the -DBUILD_LIBNOISE option. This option takes one of three values: 
 
 - GITHUB, which clones and builds libnoise from the GitHub repo,
 - SRCPKG, which downloads the master branch from the GitHub repo and builds it, or
 - (path/to/libnois_src.zip), which unpacks a local copy of the source zip file and builds it
 
-If BUILD_LIBNOISE is not used, the build system will look for the library in the system locations.
+If BUILD_LIBNOISE is not used, the build system will look for the library in the system locations.  Note that the Debian/Ubuntu libnoise-dev package installs the include files in /usr/include/libnoise rather than /usr/include/noise, so the libnoise #includes in noisetool don't include the 'noise' directory pre-pend.
 
 So, for Linux:
 
@@ -28,6 +28,8 @@ So, for Linux:
 or, for Windows/MSYS2:
 
     cmake -G "MSYS Makefiles" -DBUILD_LIBNOISE=GITHUB ..
+
+Remove the -DBUILD_LIBNOISE=... thing and just do a 'cmake ..' to use the system's libnoise package
 
 ## Usage
 
