@@ -1,4 +1,4 @@
-#include <noise/noise.h>
+#include <noise.h>
 #include "noiseutils.h"
 #include <stdlib.h>
 #include <stdarg.h>

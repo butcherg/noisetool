@@ -3,6 +3,7 @@ project(noisetool VERSION 0.1)
 
 #set(CMAKE_CXX_STANDARD 20)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 string(TIMESTAMP BUILDDATE)
 add_compile_options(-ggdb -Wno-deprecated-enum-enum-conversion -DVERSION="${CMAKE_PROJECT_VERSION}"  -DBUILDDATE="${BUILDDATE}")
@@ -64,7 +65,7 @@ if (DEFINED BUILD_LIBNOISE)
 		message(FATAL_ERROR "BUILD_LIBNOISE not valid: ${BUILD_LIBNOISE} (Either GITHUB, SRCPKG, or valid local path/srcpackage")
 	endif()
 
-	set(LIBNOISE_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/external/usr/include)
+	set(LIBNOISE_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/external/usr/include/noise)
 	set(LIBNOISE_INC_DIR ${LIBNOISE_INCLUDE_DIR} CACHE STRING "libnoise include directory")
 	set(LIBNOISE_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/external/usr/lib)
 	set(LIBNOISE_LIB ${CMAKE_CURRENT_BINARY_DIR}/external/usr/lib/libnoise.a)
@@ -77,20 +78,14 @@ if (DEFINED BUILD_LIBNOISE)
 	target_include_directories(noisetool PRIVATE ${LIBNOISE_INCLUDE_DIR})
 	target_link_libraries(noisetool ${LIBNOISE_LIB}  ${LIBNOISE_DEPS})
 else()
-	pkg_check_modules(LIBNOISE REQUIRED libnoise)
+	find_package(LibNoise REQUIRED)
 	if (LIBNOISE_FOUND)
-		set(LIBNOISE_INC_DIR ${LIBNOISE_INCLUDE_DIR} CACHE STRING "threepp include directory")
-		include_directories(${LIBNOISE_INCLUDE_DIR})
-		target_link_libraries(noisetool ${LIBNOISE_LIBRARIES})
+		include_directories( ${LIBNOISE_INCLUDE_DIR} )
+		target_link_libraries( noisetool ${LIBNOISE_LIBRARY} )
 	else()
 		message(FATAL_ERROR "libnoise not found")
 	endif(LIBNOISE_FOUND)
 endif ()
-
-
-if(WIN32)
-#	target_link_libraries(noisetool wsock32 ws2_32 psapi)
-endif(WIN32)
 
 add_subdirectory(src)
 

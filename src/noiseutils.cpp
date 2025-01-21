@@ -24,8 +24,8 @@
 #include <iostream>
 #include <vector>
 
-#include <noise/interp.h>
-#include <noise/mathconsts.h>
+#include <interp.h>
+#include <mathconsts.h>
 
 #include "noiseutils.h"
 #include "spline.h"
