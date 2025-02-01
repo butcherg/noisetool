@@ -78,6 +78,12 @@ their noise patterns.  This requires advanced shell scripting.
 
 ToDo: More comprehensive user documentation.
 
+## Acknowledgements
+
+- spline.h is from Tino Kluge's cubic spline implementation, licensed for use under terms and conditions of the GPL-2.0 license, at https://github.com/ttk592/spline.
+
+- FindLibNoise.cmake is adapted from the file of the same name in the libnoise fork published by Joachim Schiele at https://github.com/qknight/libnoise under terms and condtions of the LGPL-2.1 license.
+
 
 
     
