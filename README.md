@@ -78,6 +78,13 @@ their noise patterns.  This requires advanced shell scripting.
 
 ToDo: More comprehensive user documentation.
 
+### Command Line Parameters
+Command line parameters are used to either fill in or replace network file parameters.
+- bounds=x,y,w,h - Define the sampling bounds of the noise topology.  Default: none, bounds need to be provided in either the noise network or on the command line.
+- gradientdepth=n - For a tapered edge gradient, the number of levels around the edge to include.
+- gradientelevation=f - for a tapered edge gradient, the fraction of 1 where the edge gradient elevation starts.
+- destfile=filename - If defined, the noise topology is saved to the destination file, based on the file type, where .png is a PNG image file, and .txt is an OpenSCAD height map.
+
 ## Acknowledgements
 
 - spline.h is from Tino Kluge's cubic spline implementation, licensed for use under terms and conditions of the GPL-2.0 license, at https://github.com/ttk592/spline.
