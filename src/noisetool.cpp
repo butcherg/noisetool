@@ -11,6 +11,8 @@
 #include <fstream>
 #include <limits>
 
+//extract command line parameters with:   grep "//cmdparm" ../src/noisetool.cpp | awk -F'//cmdparm' '{printf "-" $2 "\n" }'
+
 std::vector<std::string> split(std::string s, std::string delim)
 {
 	std::vector<std::string> v;
@@ -612,7 +614,7 @@ int main(int argc, char **argv)
 		}
 	
 		//the following read command line parameters to replace any set in the network file.  Same syntax
-		if (std::string(argv[i]).find("bounds") != std::string::npos) {  
+		if (std::string(argv[i]).find("bounds") != std::string::npos) {  //cmdparm bounds=x,y,w,h - Define the sampling bounds of the noise topology.  Default: none, bounds need to be provided in either the noise network or on the command line.
 			std::vector<std::string> bb =  split(std::string(argv[i]), "=");
 			if (bb.size() < 2) err("Malformed bounds (1)");
 			std::vector<std::string> b = split(bb[1], ",");
@@ -620,7 +622,7 @@ int main(int argc, char **argv)
 			setBounds_XYWH(atof(b[0].c_str()), atof(b[1].c_str()), atof(b[2].c_str()), atof(b[3].c_str()));
 		}
 		
-		if (std::string(argv[i]).find("destsize") != std::string::npos) { 
+		if (std::string(argv[i]).find("destsize") != std::string::npos) { //cmpparm destsize=w,h - Defines the destination noise map size.  Default: none, destsize needs to be provide in either the noise network or on the command line.
 			std::vector<std::string> dd =  split(std::string(argv[i]), "=");
 			if (dd.size() < 2) err("Malformed destsize (destsize:w,h)");
 			std::vector<std::string> d = split(dd[1], ",");
@@ -629,13 +631,13 @@ int main(int argc, char **argv)
 			desth = atoi(d[1].c_str());
 		}
 		
-		if (std::string(argv[i]).find("gradientdepth") != std::string::npos) {  
+		if (std::string(argv[i]).find("gradientdepth") != std::string::npos) {  //cmdparm gradientdepth=n - For a tapered edge gradient, the number of levels around the edge to include.
 			std::vector<std::string> dd =  split(std::string(argv[i]), "=");
 			if (dd.size() < 2) err("Malformed gradientdepth (gradientdepth:d)");
 			edgegradientdepth = atoi(dd[1].c_str());
 		}
 		
-		if (std::string(argv[i]).find("gradientelevation") != std::string::npos) {  
+		if (std::string(argv[i]).find("gradientelevation") != std::string::npos) {  //cmdparm gradientelevation=f - for a tapered edge gradient, the fraction of 1 where the edge gradient elevation starts.
 			std::vector<std::string> dd =  split(std::string(argv[i]), "=");
 			if (dd.size() < 2) err("Malformed gradientelevation (gradientelevation:f)");
 			edgegradientelevation = atoi(dd[1].c_str());
@@ -653,7 +655,7 @@ int main(int argc, char **argv)
 		}
 		*/
 		
-		if (std::string(argv[i]).find("destfile") != std::string::npos) {  
+		if (std::string(argv[i]).find("destfile") != std::string::npos) {  //cmdparm destfile=filename - If defined, the noise topology is saved to the destination file, based on the file type, where .png is a PNG image file, and .txt is an OpenSCAD height map.
 			std::vector<std::string> d =  split(std::string(argv[i]), "=");
 			if (d.size() < 2) err("Malformed destfile");
 			destfile = d[1];
