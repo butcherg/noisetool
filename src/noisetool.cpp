@@ -445,6 +445,31 @@ void parseScaleBias(std::string parms)
 	addDDNode(name, ddnote);
 }
 
+//class modifier ScalePoint
+void parseScalePoint(std::string parms)
+{
+	std::string name, ddnote="module::ScalePoint\n";
+	module::ScalePoint *s = new module::ScalePoint();
+	std::vector<std::string> pp =  split(std::string(parms), ";");
+	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
+		std::vector<std::string> parm =  split(*it, "=");
+		if (parm[0].find("name") != std::string::npos) name = parm[1]; 
+		else if (parm[0].find("scale") != std::string::npos) { 
+			std::vector<std::string> ss =  split(std::string(parm[1]), ",");
+			if (ss.size() == 1) 
+				s->SetScale(atof(ss[0].c_str()));
+			else if (ss.size() == 3) 
+				s->SetScale(atof(ss[0].c_str()), atof(ss[1].c_str()), atof(ss[2].c_str()));
+			else 
+				parse_err(string_format("Malformed scale parameter: %s", parm[0].c_str()));
+			ddnote.append("<BR/>scale: "+parm[1]); 
+		}
+		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
+	}
+	modules[name] = s;
+	addDDNode(name, ddnote);
+}
+
 //class modifier Displace
 void parseDisplace(std::string parms)
 {
@@ -582,6 +607,7 @@ void parseFile(std::string filename)
 		else if (l[0] == "Displace") parseDisplace(l[1]);
 		else if (l[0] == "Invert") parseInvert(l[1]);
 		else if (l[0] == "ScaleBias") parseScaleBias(l[1]);
+		else if (l[0] == "ScalePoint") parseScalePoint(l[1]);
 		
 		//network:
 		else if (l[0] == "Connect") parseConnect(l[1]);
