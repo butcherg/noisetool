@@ -74,7 +74,7 @@ void parse_err(std::string msg)
 
 using namespace noise;
 
-std::string outputmodule, builder;
+std::string outputmodule, outputname, builder;
 
 std::map<std::string, module::Module*> modules;
 std::string dd;
@@ -524,18 +524,22 @@ void parseConnect(std::string parms)
 		instance = atoi(p[3].c_str());
 		if (modules[sink]->GetSourceModuleCount() < instance) parse_err("This connect overloads the sink module connect count");
 	}
-	modules[sink]->SetSourceModule(instance, *(modules[source]));
+	if (sink == outputname) 
+		outputmodule = source;
+	else
+		modules[sink]->SetSourceModule(instance, *(modules[source]));
 	dd.append("\t"+source+" -> "+sink+";\n");
 }
 
 //class output
 void parseOutput(std::string parms)
 {
-	std::string ddnote;
+	std::string ddnote="module::Output\n";
 	std::vector<std::string> pp =  split(std::string(parms), ";");
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0] == "module")  outputmodule = parm[1];
+		else if (parm[0] == "name") outputname = parm[1];
 		//else if (parm[0] == "boundsxy") {
 		//	std::vector<std::string> bb =  split(std::string(parm[1]), ",");
 		//	if (bb.size() < 4) err("Bounds doesn't contain 4 numbers (x1,y1,x2,y2)");
@@ -560,9 +564,15 @@ void parseOutput(std::string parms)
 		else if (parm[0] == "edgegradientelevation") { edgegradientelevation = atoi(parm[1].c_str());  ddnote.append("edgegradientelevation: "+parm[1]+"<BR/>"); }
 		else parse_err(string_format("Unrecognized keyword: %s", parm[0].c_str()));
 	}
-	if (outputmodule.size() == 0) parse_err("outputmodule parameter not defined");
-	dd.append("\t"+outputmodule+" -> output\n");
-	addDDNode("output", ddnote);
+	//if (outputmodule.size() == 0) parse_err("outputmodule parameter not defined");
+	if (outputmodule.size() > 0) {
+		dd.append("\t"+outputmodule+" -> output\n");
+		addDDNode("output", ddnote);
+	}
+	else {
+		addDDNode(outputname, ddnote);
+	}
+	
 }
 
 
@@ -586,7 +596,7 @@ void parseFile(std::string filename)
 		else if (l[0] == "Checkerboard") parseCheckerboard(l[1]);
 		else if (l[0] == "Cylinders") parseCylinders(l[1]);
 		else if (l[0] == "Perlin") parsePerlin(l[1]);
-		else if (l[0] == "Ridgedmulti") parseRidgedMulti(l[1]);
+		else if (l[0] == "RidgedMulti") parseRidgedMulti(l[1]);
 		else if (l[0] == "Turbulence") parseTurbulence(l[1]);
 		else if (l[0] == "Voronoi") parseVoronoi(l[1]);
 		
