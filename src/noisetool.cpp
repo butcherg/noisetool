@@ -637,6 +637,7 @@ void parseFile(std::string filename)
 		else if (l[0] == "Invert") parseInvert(l[1]);
 		else if (l[0] == "ScaleBias") parseScaleBias(l[1]);
 		else if (l[0] == "ScalePoint") parseScalePoint(l[1]);
+		else if (l[0] == "Rotate") parseRotate(l[1]);
 		
 		//network:
 		else if (l[0] == "Connect") parseConnect(l[1]);
