@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.10)
 project(noisetool VERSION 0.1)
 
 #set(CMAKE_CXX_STANDARD 20)
@@ -9,7 +9,7 @@ string(TIMESTAMP BUILDDATE)
 add_compile_options(-ggdb -Wno-deprecated-enum-enum-conversion -DVERSION="${CMAKE_PROJECT_VERSION}"  -DBUILDDATE="${BUILDDATE}")
 #add_compile_options(-DVERSION="${CMAKE_PROJECT_VERSION}"  -DBUILDDATE="${BUILDDATE}")
 
-add_executable(noisetool src/noisetool.cpp )
+add_executable(noisetool src/noisetool.cpp src/noiseutils.cpp )
 
 find_package(PkgConfig REQUIRED)
 
@@ -24,7 +24,7 @@ if (DEFINED BUILD_LIBNOISE)
 	else()
 		set(CMAKECMD "cmake")
 	endif()
-	set(CMAKE_ARGUMENTS -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=${BUILD_PREFIX} )
+	set(CMAKE_ARGUMENTS -DCMAKE_BUILD_TYPE=DEBUG -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=${BUILD_PREFIX} )
 
 	include(ExternalProject)
 	if (BUILD_LIBNOISE STREQUAL "GITHUB")
