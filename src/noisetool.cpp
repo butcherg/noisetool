@@ -11,6 +11,12 @@
 #include <fstream>
 #include <limits>
 
+#include <cstdlib> // For rand() and srand()
+#include <ctime>   // For time()
+
+//#include <random> // For random number generation
+//#include <chrono> // For seeding with time
+
 //extract command line parameters with:   grep "//cmdparm" ../src/noisetool.cpp | awk -F'//cmdparm' '{printf "-" $2 "\n" }'
 
 std::vector<std::string> split(std::string s, std::string delim)
@@ -69,6 +75,13 @@ void parse_err(std::string msg)
 {
 	printf("Error: %s. (line %d)\n", msg.c_str(), lineno);
 	exit(EXIT_FAILURE);
+}
+
+
+float random_number(int lower, int upper)
+{
+	//srand(static_cast<unsigned int>(time(0)));
+	return (float) ((rand() % upper) + lower);
 }
 
 
@@ -549,11 +562,19 @@ void parseConnect(std::string parms)
 	dd.append("\t"+source+" -> "+sink+";\n");
 }
 
+void printvec(std::string name, std::vector<std::string> v)
+{
+	std::cout << name << ": "; 
+	for(auto s : v) std::cout << "-" << s << "- ";
+	std::cout << std::endl;
+}
+
 //class output
 void parseOutput(std::string parms)
 {
 	std::string ddnote="module::Output\n";
 	std::vector<std::string> pp =  split(std::string(parms), ";");
+	printvec("paramlist:", pp);
 	for (std::vector<std::string>::iterator it = pp.begin(); it != pp.end(); ++it) {
 		std::vector<std::string> parm =  split(*it, "=");
 		if (parm[0] == "module")  outputmodule = parm[1];
@@ -566,10 +587,38 @@ void parseOutput(std::string parms)
 		//if (parm[0].find("boundswh") != std::string::npos) {
 		else if (parm[0] == "builder")  { builder = parm[1]; ddnote.append("builder: "+parm[1]+"<BR/>"); }
 		else if (parm[0] == "bounds") {
+			/*
 			std::vector<std::string> bb =  split(std::string(parm[1]), ",");
 			if (bb.size() < 4) err("Bounds doesn't contain 4 numbers (x,y,w,h)");
 			setBounds_XYWH(atof(bb[0].c_str()), atof(bb[1].c_str()), atof(bb[2].c_str()), atof(bb[3].c_str()));
 			ddnote.append("bounds: "+parm[1]+"<BR/>");
+			*/
+			float bx, by, bw, bh;
+			//std::vector<std::string> bb =  split(std::string(parm[1]), "=");
+			//if (bb.size() < 2) err("Malformed bounds (1)");
+			//std::cout << "parm[1]:" << parm[1] << std::endl;
+			std::vector<std::string> b = split(std::string(parm[1]), ",");
+			//std::cout << "b[0]:" << b[0] << "  b[1]:" << b[1] << std::endl;
+			if (b.size() < 4) err("Bounds doesn't contain 4 numbers (x,y,w,h)");
+			if (b[0].find("rnd") != std::string::npos) {
+				std::vector<std::string> br = split(b[0], "-");
+				if (br.size() != 3) err("random number specification invalid.");
+				bx = random_number(atoi(br[1].c_str()), atoi(br[2].c_str()));
+			}
+			else {
+				bx = atof(b[0].c_str());
+			}
+			if (b[1].find("rnd") != std::string::npos) {
+				std::vector<std::string> br = split(b[1], "-");
+				if (br.size() != 3) err("random number specification invalid.");
+				by = random_number(atoi(br[1].c_str()), atoi(br[2].c_str()));
+			}
+			else {
+				by = atof(b[1].c_str());
+			}
+			bw = atof(b[2].c_str());
+			bh = atof(b[3].c_str());
+			setBounds_XYWH(bx, by, bw, bh);
 		}
 		else if (parm[0] == "destfile") { destfile = parm[1]; ddnote.append("destfile: "+parm[1]+"<BR/>"); }
 		else if (parm[0] == "destsize") {
@@ -662,6 +711,9 @@ int main(int argc, char **argv)
 	
 	if (outputmodule.size() == 0) err("No module connected to output pipeline");
 	
+	//set up the random number generator
+	srand(static_cast<unsigned int>(time(0)));
+	
 	for (unsigned i=2; i<argc; i++) {
 	
 		if (std::string(argv[2]) == "digraph") {
@@ -670,12 +722,32 @@ int main(int argc, char **argv)
 		}
 	
 		//the following read command line parameters to replace any set in the network file.  Same syntax
-		if (std::string(argv[i]).find("bounds") != std::string::npos) {  //cmdparm bounds=x,y,w,h - Define the sampling bounds of the noise topology.  Default: none, bounds need to be provided in either the noise network or on the command line.
+		if (std::string(argv[i]).find("bounds") != std::string::npos) {  //cmdparm bounds=x,y,w,h - Define the sampling bounds of the noise topology. Setting x and/or y to 'rnd:lower:upper' suppliles a random number in the lower/upper range.  Default: none, bounds need to be provided in either the noise network or on the command line.
+			float bx, by, bw, bh;
 			std::vector<std::string> bb =  split(std::string(argv[i]), "=");
 			if (bb.size() < 2) err("Malformed bounds (1)");
 			std::vector<std::string> b = split(bb[1], ",");
 			if (b.size() < 4) err("Malformed bounds (2)");
-			setBounds_XYWH(atof(b[0].c_str()), atof(b[1].c_str()), atof(b[2].c_str()), atof(b[3].c_str()));
+			if (b[0].find("rnd") != std::string::npos) {
+				std::vector<std::string> br = split(b[0], ":");
+				if (br.size() != 3) err("random number specification invalid.");
+				bx = random_number(atoi(br[1].c_str()), atoi(br[2].c_str()));
+			}
+			else {
+				bx = atof(b[0].c_str());
+			}
+			if (b[1].find("rnd") != std::string::npos) {
+				std::vector<std::string> br = split(b[1], ":");
+				if (br.size() != 3) err("random number specification invalid.");
+				by = random_number(atoi(br[1].c_str()), atoi(br[2].c_str()));
+			}
+			else {
+				by = atof(b[1].c_str());
+			}
+			bw = atof(b[2].c_str());
+			bh = atof(b[3].c_str());
+			//setBounds_XYWH(atof(b[0].c_str()), atof(b[1].c_str()), atof(b[2].c_str()), atof(b[3].c_str()));
+			setBounds_XYWH(bx, by, bw, bh);
 		}
 		
 		if (std::string(argv[i]).find("destsize") != std::string::npos) { //cmpparm destsize=w,h - Defines the destination noise map size.  Default: none, destsize needs to be provide in either the noise network or on the command line.
