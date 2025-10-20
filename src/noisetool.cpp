@@ -722,7 +722,7 @@ int main(int argc, char **argv)
 		}
 	
 		//the following read command line parameters to replace any set in the network file.  Same syntax
-		if (std::string(argv[i]).find("bounds") != std::string::npos) {  //cmdparm bounds=x,y,w,h - Define the sampling bounds of the noise topology. Setting x and/or y to 'rnd:lower:upper' suppliles a random number in the lower/upper range.  Default: none, bounds need to be provided in either the noise network or on the command line.
+		if (std::string(argv[i]).find("bounds") != std::string::npos) {  //cmdparm bounds=x,y,w,h - Define the sampling bounds of the noise topology. Setting x and/or y to 'rnd-lower-upper' suppliles a random number in the lower/upper range.  Default: none, bounds need to be provided in either the noise network or on the command line.
 			float bx, by, bw, bh;
 			std::vector<std::string> bb =  split(std::string(argv[i]), "=");
 			if (bb.size() < 2) err("Malformed bounds (1)");
