@@ -29,7 +29,15 @@ or, for Windows/MSYS2:
 
     cmake -G "MSYS Makefiles" -DBUILD_LIBNOISE=GITHUB ..
 
-Remove the -DBUILD_LIBNOISE=... thing and just do a 'cmake ..' to use the system's libnoise package
+Remove the -DBUILD_LIBNOISE=... thing and just do a 'cmake ..' to use the system's libnoise package.
+
+Then, 
+    make
+
+### Hack Notes
+
+- libnoise currently specifies CMake version 3.0 required.  Recent CMake wants to see at least version 3.5; I submitted an issue to the libnoise to change it.  In the meantime, easiest thing to do is to start make, let it error out, then edit external/libnoise/src/libnoise_download/CMakeLists.txt to bump the CMake version, save, and re-run make.
+- For Mac builds, the CMake-generated Makefile builds liblibnoise.a, rather than libnoise.a.  Work around this by creating a symbolic link to libnoise.a from liblibnoise.a in external/usr/lib.
 
 ## Usage
 
